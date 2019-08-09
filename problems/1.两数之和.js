@@ -38,3 +38,20 @@ var twoSum = function(nums, target) {
         }
     }
 };
+
+// 哈希表解法 O(n)
+var twoSum = function(nums, target) {
+    let map = new Map()
+    let len = nums.length
+    for (let i = 0; i < len; i++) {
+        map.set(nums[i], i)
+    }
+    let res
+    for (let i = 0; i < len; i++) {
+        let goal = target - nums[i]
+        if (map.has(goal) && map.get(goal) !== i) {
+            return [map.get(goal), i]
+        }
+    }
+    return null
+};

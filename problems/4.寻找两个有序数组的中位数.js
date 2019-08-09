@@ -54,3 +54,22 @@ var findMedianSortedArrays = function(nums1, nums2) {
     return mid;
 };
 
+// O(m + n)方法，找第mid小的数，Log的还是看不懂。。
+var findMedianSortedArrays = function(nums1, nums2) {
+    let len1 = nums1.length, len2 = nums2.length
+    let len = len1 + len2
+    let mid = len % 2 == 0 ? len / 2 : (len - 1) / 2
+    console.log(mid)
+    let left = -1, right = -1
+    let aStart = 0, bStart = 0
+    for (let i = 0; i <= mid; i++) {
+        left = right;
+        if (aStart < len1 && (bStart >= len2 || nums1[aStart] < nums2[bStart])) {
+            right = nums1[aStart++]
+        } else {
+            right = nums2[bStart++]
+        }
+    }
+    return len % 2 == 0 ? (left + right) / 2 : right
+};
+
