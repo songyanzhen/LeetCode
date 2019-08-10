@@ -76,29 +76,27 @@
  * @return {boolean}
  */
 var isMatch = function(s, p) {
-    let sLen = s.length, pLen = p.length;
-    let dp = new Array();
-    for(let i = 0; i <= sLen; i++)
-        dp[i] = new Array();
-    dp[0][0] = true;
-    // dp[i][j] => s[0...i-1]与p[0...j-1]匹配
-    for(let i = 1; i <= sLen; i++)
-        dp[i][0] = false; //模板字符串为空
-    for(let i = 1; i <= pLen; i++)
-        dp[0][i] = i > 1 && p[i - 1] == '*' && dp[0][i - 2]; //原字符串为空
-    // 考虑边界值的情况
+    let sLen = s.length, pLen = p.length
+    let dp = []
+    for (let i = 0; i <= sLen; i++)
+        dp[i] = []
+    dp[0][0] = true // dp[i][j] => s[1...i]与p[1...j]匹配
+    for (let i = 1; i <= sLen; i++)
+        dp[i][0] = false //模板字符串为空
+    for (let i = 1; i <= pLen; i++)
+        dp[0][i] = i > 1 && p[i - 1] == '*' && dp[0][i - 2] //原字符串为空,当前p为.*的情况
     
-    for(let i = 1; i <= sLen; i++) {
+    for (let i = 1; i <= sLen; i++) {
         for(let j = 1; j <= pLen; j++) {
-            if(p[j - 1] == '*') {
-                dp[i][j] = dp[i][j - 2] || // 0位的情况，即与往前两位的模板字符串匹配
-                    ((s[i - 1] == p[j - 2] || p[j - 2] == '.') && dp[i - 1][j]);
-                    // 1位以上的情况，当前字符与星号前字符相同或为'.'，
-                    // 并且该字符前的字符串与当前模板匹配（因为x*是万能的不管当前字符有几位都可以匹配）
+            if (p[j - 1] == '*') {
+                dp[i][j] = dp[i][j - 2] // 0位的情况，即与往前两位的模板字符串匹配
+                        || ((s[i - 1] == p[j - 2] || p[j - 2] == '.') && dp[i - 1][j])
+                        // 1位以上的情况，当前字符与星号前字符相同或为'.'，
+                        // 并且该字符前的字符串与当前模板匹配（因为x*是万能的不管当前字符有几位都可以匹配）
             } else {
-                dp[i][j] = ((s[i - 1] == p[j - 1]) || (p[j - 1] == '.')) && dp[i - 1][j - 1];
+                dp[i][j] = ((s[i - 1] == p[j - 1] || p[j - 1] == '.') && dp[i - 1][j - 1])
             } // p[j - 1]不为*时，字符相等或模板字符为'.'，并且该字符前的两个字符串也相匹配
         }
     }
-    return dp[sLen][pLen]; // dp[i][j] => s[0...i-1]与p[0...j-1]匹配
-}
+    return dp[sLen][pLen]
+};
